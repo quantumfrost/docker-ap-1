@@ -178,6 +178,16 @@ hostapd_setup() {
                             HW_MODE=${value//\"/};;
                         "CHANNEL" )
                             CHANNEL=${value//\"/};;
+			"SUBNET" )
+                            SUBNET=${value//\"/};;
+			"IP_AP" )
+                            IP_AP=${value//\"/};;
+			"NETMASK" )
+                            NETMASK=${value//\"/};;
+			"DNS_SERVER" )
+                            DNS_SERVER=${value//\"/};;
+			"DOCKER_NAME" )
+                            DOCKER_NAME=${value//\"/};;
                         * )
                             echo Parameter "$name" in "$PATHSCRIPT"/"$CONF_FILE" not recognized
 		    esac
