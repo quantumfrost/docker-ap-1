@@ -6,6 +6,8 @@ This project is available under the MIT License.
 
 This script configures a Debian-based system to act as a wireless access point. The whole AP functionality runs inside a docker container.
 
+Create a config file called wlan_config.txt, using wlan_config_example.txt as a starting point.
+
 The script must be run as ``root`` and be given execution permissions:
 
 ```

@@ -1,2 +1,3 @@
 *.conf
+hostapd.log
 wlan_config.txt
