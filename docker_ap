@@ -41,6 +41,7 @@ IP_AP="192.168.7.1"
 NETMASK="/24"
 DNS_SERVER="8.8.8.8"
 DOCKER_NAME="ap-container"
+HT_CAPAB="[HT40-][SHORT-GI-20][SHORT-GI-40]"
 CONF_FILE="wlan_config.txt"
 
 pushd "$(dirname "$0")" > /dev/null
@@ -186,7 +187,9 @@ hostapd_setup() {
                             NETMASK=${value//\"/};;
 			"DNS_SERVER" )
                             DNS_SERVER=${value//\"/};;
-			"DOCKER_NAME" )
+			"HT_CAPAB" )
+                            HT_CAPAB=${value//\"/};;
+                        "DOCKER_NAME" )
                             DOCKER_NAME=${value//\"/};;
                         * )
                             echo Parameter "$name" in "$PATHSCRIPT"/"$CONF_FILE" not recognized
@@ -214,7 +217,7 @@ init () {
 
     ### Generating hostapd.conf file
     echo -e "[+] Generating hostapd.conf"
-    sed -e "s/_SSID/$SSID/g" -e "s/_IFACE/$IFACE/" -e "s/_HW_MODE/$HW_MODE/g" -e "s/_CHANNEL/$CHANNEL/g" -e "s/_PASSPHRASE/$PASSPHRASE/g" -e "s/_WPA_MODE/$WPA_MODE/g" "$PATHSCRIPT"/templates/hostapd.template > "$PATHSCRIPT"/hostapd.conf
+    sed -e "s/_SSID/$SSID/g" -e "s/_IFACE/$IFACE/" -e "s/_HW_MODE/$HW_MODE/g" -e "s/_CHANNEL/$CHANNEL/g" -e "s/_HT_CAPAB/$HT_CAPAB/g" -e "s/_PASSPHRASE/$PASSPHRASE/g" -e "s/_WPA_MODE/$WPA_MODE/g" "$PATHSCRIPT"/templates/hostapd.template > "$PATHSCRIPT"/hostapd.conf
 
     ### Generating dnsmasq.conf file
     echo -e "[+] Generating dnsmasq.conf" 
@@ -224,7 +227,7 @@ init () {
 service_start () { 
     IFACE="$1"
     echo -e "[+] Starting the docker container with name ${GREEN}$DOCKER_NAME${NC}"
-    docker run -dt --name $DOCKER_NAME --net=bridge --cap-add=NET_ADMIN --cap-add=NET_RAW -v "$PATHSCRIPT"/hostapd.conf:/etc/hostapd/hostapd.conf -v "$PATHSCRIPT"/dnsmasq.conf:/etc/dnsmasq.conf $DOCKER_IMAGE > /dev/null 2>&1
+    docker run -dt --name $DOCKER_NAME --net=bridge --cap-add=NET_ADMIN --cap-add=NET_RAW -v "$PATHSCRIPT"/hostapd.conf:/etc/hostapd/hostapd.conf -v "$PATHSCRIPT"/dnsmasq.conf:/etc/dnsmasq.conf -v "$PATHSCRIPT"/hostapd.log:/var/log/hostapd.log $DOCKER_IMAGE > /dev/null 2>&1
     pid=$(docker inspect -f '{{.State.Pid}}' $DOCKER_NAME)
     
     # Assign phy wireless interface to the container 

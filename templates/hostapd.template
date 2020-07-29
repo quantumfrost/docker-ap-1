@@ -13,6 +13,13 @@ wpa=2
 wpa_passphrase=_PASSPHRASE
 wpa_key_mgmt=_WPA_MODE
 
+wpa_pairwise=CCMP
+rsn_pairwise=CCMP
+ieee80211n=1
+ht_capab=_HT_CAPAB
+driver=nl80211
+
+
 #rsn_pairwise=CCMP
 #ieee8021x=1
 #eapol_version=2
